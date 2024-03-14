@@ -1,6 +1,5 @@
 # ninja log v5
 605	1034	1708608213921773722	libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_opengl3.cpp.o	8a88709bae4de316
-13743	13908	1708608226803108562	/home/nikola/Desktop/Fakultet/RG/project_base/project_base	c68bc8f0df39a034
 1	12449	1708608225338956838	libs/imgui/CMakeFiles/imgui.dir/src/imgui.cpp.o	e9f66ef32f00228b
 3	7946	1708608220838490472	libs/imgui/CMakeFiles/imgui.dir/src/imgui_demo.cpp.o	f4017838b112175e
 5107	13668	1708608226555082859	libs/imgui/CMakeFiles/imgui.dir/src/imgui_widgets.cpp.o	c1870b197e36911
@@ -13,3 +12,17 @@
 314	9391	1708608222282640123	libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o	be2e76c12f9cb4b0
 0	10673	1708608223566773192	CMakeFiles/STB_IMAGE.dir/libs/stb_image.cpp.o	88f649ee9f809088
 0	6910	1708608219802383104	CMakeFiles/project_base.dir/src/main.cpp.o	d1e8803730d52cff
+2	176	1710425874336691821	libs/glad/CMakeFiles/glad.dir/src/glad.c.o	6687cf6b2c8393c5
+176	187	1710425874348691990	libs/glad/libglad.a	fa45e380927a5a17
+187	433	1710425874592695415	libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_glfw.cpp.o	835ff8bfaf623e75
+433	666	1710425874828698728	libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_opengl3.cpp.o	7ebe15bc4a20ee0f
+666	3046	1710425877204732083	libs/imgui/CMakeFiles/imgui.dir/src/imgui_tables.cpp.o	66f56f7dde92018b
+2	4185	1710425878340748029	CMakeFiles/project_base.dir/src/main.cpp.o	4a175cb0cdd15d4f
+3	5327	1710425879484764088	libs/imgui/CMakeFiles/imgui.dir/src/imgui_demo.cpp.o	78ea5354117eed54
+3	6528	1710425880680780877	libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o	b5443bc59a1bc33e
+2	7837	1710425881992799292	CMakeFiles/STB_IMAGE.dir/libs/stb_image.cpp.o	140e4b6b738a7297
+7837	7851	1710425882012799572	libSTB_IMAGE.a	cb06c164a33f93a8
+3	9215	1710425883368818605	libs/imgui/CMakeFiles/imgui.dir/src/imgui.cpp.o	e83c092dbd64aff
+3046	9891	1710425884044828093	libs/imgui/CMakeFiles/imgui.dir/src/imgui_widgets.cpp.o	79dc19154dbcd638
+9891	9967	1710425884124829216	libs/imgui/libimgui.a	bdd3520b36799113
+9967	10129	1710425884288831517	/home/nikola/Desktop/Fakultet/RG/Project/project_base	cd09f3272eab2a2a
