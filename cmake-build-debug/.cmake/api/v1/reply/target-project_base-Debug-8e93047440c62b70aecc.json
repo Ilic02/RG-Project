@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "/home/nikola/Desktop/Fakultet/RG/Project/project_base"
+			"path" : "/home/nikola/Desktop/Fakultet/RG-Project/project_base"
 		}
 	],
 	"backtrace" : 1,
@@ -95,19 +95,19 @@
 			[
 				{
 					"backtrace" : 7,
-					"path" : "/home/nikola/Desktop/Fakultet/RG/Project/cmake-build-debug/configuration"
+					"path" : "/home/nikola/Desktop/Fakultet/RG-Project/cmake-build-debug/configuration"
 				},
 				{
 					"backtrace" : 8,
-					"path" : "/home/nikola/Desktop/Fakultet/RG/Project/include"
+					"path" : "/home/nikola/Desktop/Fakultet/RG-Project/include"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "/home/nikola/Desktop/Fakultet/RG/Project/libs/glad/include"
+					"path" : "/home/nikola/Desktop/Fakultet/RG-Project/libs/glad/include"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "/home/nikola/Desktop/Fakultet/RG/Project/libs/imgui/include"
+					"path" : "/home/nikola/Desktop/Fakultet/RG-Project/libs/imgui/include"
 				}
 			],
 			"language" : "CXX",

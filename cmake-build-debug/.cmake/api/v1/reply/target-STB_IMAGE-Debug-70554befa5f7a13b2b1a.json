@@ -59,11 +59,11 @@
 			[
 				{
 					"backtrace" : 2,
-					"path" : "/home/nikola/Desktop/Fakultet/RG/Project/cmake-build-debug/configuration"
+					"path" : "/home/nikola/Desktop/Fakultet/RG-Project/cmake-build-debug/configuration"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "/home/nikola/Desktop/Fakultet/RG/Project/include"
+					"path" : "/home/nikola/Desktop/Fakultet/RG-Project/include"
 				}
 			],
 			"language" : "CXX",
