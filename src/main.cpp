@@ -13,6 +13,8 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 #include <iostream>
 
@@ -140,7 +142,7 @@ int main() {
     }
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    //stbi_set_flip_vertically_on_load(true);
+    //stbi_set_flip_vertically_on_load(false);
 
     programState = new ProgramState;
     programState->LoadFromFile("resources/program_state.txt");
@@ -237,8 +239,14 @@ int main() {
 
     // load models
     // -----------
-    Model ourModel("resources/objects/OBJ/OBJ.obj");
+    Model ourModel("resources/objects/House/Manor.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
+
+    Model ourModel2("resources/objects/Dog/13466_Canaan_Dog_v1_L3.obj");
+    ourModel2.SetShaderTextureNamePrefix("material.");
+
+    Model ourModel3("resources/objects/Cat/12221_Cat_v1_l3.obj");
+    ourModel3.SetShaderTextureNamePrefix("material.");
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -248,7 +256,7 @@ int main() {
 
     pointLight.constant = 1.0f;
     pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
+    pointLight.quadratic = 0.00f;
 
 
 
@@ -267,6 +275,8 @@ int main() {
         // input
         // -----
         processInput(window);
+
+        programState->backpackScale = 30.0f;
 
 
         // render
@@ -301,6 +311,26 @@ int main() {
         model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
+
+        //DOG
+        glm::mat4 model2 = glm::mat4 (1.0f);
+        model2 = glm::translate(model2, glm::vec3(10.0f, 0.0f, 25.0f));
+        model2 = glm::scale(model2, glm::vec3(0.2f));
+        model2 = glm::rotate(model2, glm::radians(270.f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        ourShader.use();
+        ourShader.setMat4("model", model2);
+        ourModel2.Draw(ourShader);
+
+        //CAT
+        glm::mat4 model3 = glm::mat4 (1.0f);
+        model3 = glm::translate(model3, glm::vec3(-10.0f, 0.0f, 25.0f));
+        model3 = glm::scale(model3, glm::vec3(0.2f));
+        model3 = glm::rotate(model3, glm::radians(270.f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        ourShader.use();
+        ourShader.setMat4("model", model3);
+        ourModel3.Draw(ourShader);
 
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         skyboxShader.use();
@@ -397,7 +427,7 @@ void DrawImGui(ProgramState *programState) {
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
         ImGui::DragFloat3("Backpack position", (float*)&programState->backpackPosition);
-        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 100.0);
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
