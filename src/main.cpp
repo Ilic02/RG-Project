@@ -61,8 +61,8 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 backpackPosition = glm::vec3(0.0f);
-    float backpackScale = 1.0f;
+    glm::vec3 modelPosition = glm::vec3(0.0f);
+    float modelScale = 1.0f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -248,6 +248,12 @@ int main() {
     Model ourModel3("resources/objects/Cat/12221_Cat_v1_l3.obj");
     ourModel3.SetShaderTextureNamePrefix("material.");
 
+    Model ourModel4("resources/objects/Cow/13083_Abondance_Cattle_v1_l3.obj");
+    ourModel4.SetShaderTextureNamePrefix("material.");
+
+    Model ourModel5("resources/objects/Horse/10026_Horse_v01-it2.obj");
+    ourModel5.SetShaderTextureNamePrefix("material.");
+
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
     pointLight.ambient = glm::vec3(1.5, 1.5, 1.5);
@@ -257,7 +263,6 @@ int main() {
     pointLight.constant = 1.0f;
     pointLight.linear = 0.09f;
     pointLight.quadratic = 0.00f;
-
 
 
     // draw in wireframe
@@ -276,7 +281,7 @@ int main() {
         // -----
         processInput(window);
 
-        programState->backpackScale = 30.0f;
+        programState->modelScale = 30.0f;
 
 
         // render
@@ -301,14 +306,16 @@ int main() {
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = programState->camera.GetViewMatrix();
+
+
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
-                               programState->backpackPosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
+                               programState->modelPosition); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(programState->modelScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
@@ -331,6 +338,28 @@ int main() {
         ourShader.use();
         ourShader.setMat4("model", model3);
         ourModel3.Draw(ourShader);
+
+        //COW
+        glm::mat4 model4 = glm::mat4(1.0f);
+        model4 = glm::translate(model4, glm::vec3(10.0f, 0.0f, 150.0f));
+        model4 = glm::scale(model4, glm::vec3(0.2f));
+        model4 = glm::rotate(model4, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.f));
+        model4 = glm::rotate(model4, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        ourShader.use();
+        ourShader.setMat4("model", model4);
+        ourModel4.Draw(ourShader);
+
+        //HORSE
+        glm::mat4 model5 = glm::mat4(1.0f);
+        model5 = glm::translate(model5, glm::vec3(-10.0f, 0.0f, 150.0f));
+        model5 = glm::scale(model5, glm::vec3(0.01f));
+        model5 = glm::rotate(model5, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model5 = glm::rotate(model5, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        ourShader.use();
+        ourShader.setMat4("model", model5);
+        ourModel5.Draw(ourShader);
 
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         skyboxShader.use();
@@ -404,8 +433,9 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     lastX = xpos;
     lastY = ypos;
 
-    if (programState->CameraMouseMovementUpdateEnabled)
+    if (programState->CameraMouseMovementUpdateEnabled) {
         programState->camera.ProcessMouseMovement(xoffset, yoffset);
+    }
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -426,8 +456,8 @@ void DrawImGui(ProgramState *programState) {
         ImGui::Text("Hello text");
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
-        ImGui::DragFloat3("Backpack position", (float*)&programState->backpackPosition);
-        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 100.0);
+        ImGui::DragFloat3("Model position", (float*)&programState->modelPosition);
+        ImGui::DragFloat("Model scale", &programState->modelScale, 0.05, 0.1, 100.0);
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
