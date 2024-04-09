@@ -28,6 +28,8 @@ void processInput(GLFWwindow *window);
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
+unsigned int loadTexture(const char *path);
+
 unsigned int loadCubemap(vector<std::string> faces);
 
 void renderQuad();
@@ -139,6 +141,10 @@ int main() {
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     //stbi_set_flip_vertically_on_load(false);
 
+    //BLEND
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     programState = new ProgramState;
     programState->LoadFromFile("resources/program_state.txt");
     if (programState->ImGuiEnabled) {
@@ -161,6 +167,7 @@ int main() {
     // -------------------------
     Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
+    Shader blendingShader("resources/shaders/blending.vs", "resources/shaders/blending.fs");
     Shader hdrShader("resources/shaders/hdr.vs", "resources/shaders/hdr.fs");
     float skyboxVertices[] = {
             // positions
@@ -206,6 +213,34 @@ int main() {
             -1.0f, -1.0f,  1.0f,
             1.0f, -1.0f,  1.0f
     };
+
+    float floorVertices[] = {
+            // positions          // texture Coords
+            0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // bottom-left
+            0.5f, -0.5f, 0.0f,   1.0f, 0.0f,  // bottom-right
+            0.5f, 0.5f, 0.0f,    1.0f, 1.0f,   // top-right
+
+            0.5f, 0.5f, 0.0f,    1.0f, 1.0f,   // top-right
+            -0.5f, 0.5f, 0.0f,   0.0f, 1.0f,   // top-left
+            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f    // bottom-left
+
+    };
+
+    // floor VAO
+    unsigned int floorVAO, floorVBO;
+    glGenVertexArrays(1, &floorVAO);
+    glGenBuffers(1, &floorVBO);
+    glBindVertexArray(floorVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, floorVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(floorVertices), &floorVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    unsigned int floorTexture = loadTexture(FileSystem::getPath("resources/textures/floor.jpg").c_str());
+
+
     unsigned int hdrFBO;
     glGenFramebuffers(1, &hdrFBO);
     // create floating point color buffer
@@ -293,7 +328,6 @@ int main() {
     pointLight.linear = 0.09f;
     pointLight.quadratic = 0.032f;
 
-
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -318,7 +352,6 @@ int main() {
         // ------
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();;
@@ -355,7 +388,7 @@ int main() {
 
         //DOG
         glm::mat4 model2 = glm::mat4 (1.0f);
-        model2 = glm::translate(model2, glm::vec3(15.0f, 0.0f, 30.0f));
+        model2 = glm::translate(model2, glm::vec3(15.0f, 0.5f, 30.0f));
         model2 = glm::scale(model2, glm::vec3(0.15f));
         model2 = glm::rotate(model2, glm::radians(270.f), glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -422,7 +455,6 @@ int main() {
         ourShader.setMat4("model", model8);
         ourModel8.Draw(ourShader);
 
-
         //HOUSE2
         glm::mat4 model9 = glm::mat4(1.0f);
         model9 = glm::translate(model9, glm::vec3(50.0f, 0.0f, 90.0f));
@@ -433,6 +465,19 @@ int main() {
         ourShader.setMat4("model", model9);
         ourModel9.Draw(ourShader);
 
+        //FLOOR
+        glm::mat4 model10 = glm::mat4(1.0f);
+        blendingShader.use();
+        glBindVertexArray(floorVAO);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
+        blendingShader.setMat4("projection", projection);
+        blendingShader.setMat4("view", view);
+        model10 = glm::mat4(1.0f);
+        model10 = glm::translate(model10,glm::vec3(20.0f,0.0f,0.0f)); // translate it down so it's at the center of the scene
+        model10 = glm::scale(model10, glm::vec3(20.0f));
+        model10 = glm::rotate(model10, glm::radians(150.0f), glm::vec3(1.0f,0.0f,0.0f));
+        blendingShader.setMat4("model", model10);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         skyboxShader.use();
@@ -557,8 +602,8 @@ void DrawImGui(ProgramState *programState) {
 
     {
         static float f = 0.0f;
-        ImGui::Begin("Hello window");
-        ImGui::Text("Hello text");
+        ImGui::Begin("RG-Project");
+        ImGui::Text("Settings:");
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
         ImGui::DragFloat3("Model position", (float*)&programState->modelPosition);
@@ -626,6 +671,44 @@ unsigned int loadCubemap(vector<std::string> faces)
     return textureID;
 }
 
+unsigned int loadTexture(char const * path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;
+
+}
+
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
 void renderQuad()
@@ -637,7 +720,7 @@ void renderQuad()
                 -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
                 1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
         };
-        // setup plane VAO
+        // setup floor VAO
         glGenVertexArrays(1, &quadVAO);
         glGenBuffers(1, &quadVBO);
         glBindVertexArray(quadVAO);
