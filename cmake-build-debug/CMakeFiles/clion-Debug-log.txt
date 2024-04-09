@@ -9,6 +9,6 @@ CMake Deprecation Warning:
 
 
 -- Found ASSIMP: /usr/lib/x86_64-linux-gnu/libassimp.so
--- Configuring done (0.0s)
+-- Configuring done (0.1s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/nikola/Desktop/Fakultet/RG-Project/cmake-build-debug

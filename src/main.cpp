@@ -32,8 +32,8 @@ unsigned int loadCubemap(vector<std::string> faces);
 
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 
 // camera
 
@@ -61,30 +61,18 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 modelPosition = glm::vec3(0.0f);
+    glm::vec3 modelPosition = glm::vec3(0.0f, 0.0f, 7.0f);
     float modelScale = 1.0f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
 
-    void SaveToFile(std::string filename);
+
 
     void LoadFromFile(std::string filename);
 };
 
-void ProgramState::SaveToFile(std::string filename) {
-    std::ofstream out(filename);
-    out << clearColor.r << '\n'
-        << clearColor.g << '\n'
-        << clearColor.b << '\n'
-        << ImGuiEnabled << '\n'
-        << camera.Position.x << '\n'
-        << camera.Position.y << '\n'
-        << camera.Position.z << '\n'
-        << camera.Front.x << '\n'
-        << camera.Front.y << '\n'
-        << camera.Front.z << '\n';
-}
+
 
 void ProgramState::LoadFromFile(std::string filename) {
     std::ifstream in(filename);
@@ -168,7 +156,6 @@ int main() {
     // -------------------------
     Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
-
     float skyboxVertices[] = {
             // positions
             -1.0f,  1.0f, -1.0f,
@@ -267,14 +254,14 @@ int main() {
     ourModel9.SetShaderTextureNamePrefix("material.");
 
     PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(1.5, 1.5, 1.5);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    pointLight.position = glm::vec3(0.0f, 80.0, 50.0);
+    pointLight.ambient = glm::vec3(100.0, 100.0, 100.0);
+    pointLight.diffuse = glm::vec3(100.0, 100.0, 100.0);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
     pointLight.constant = 1.0f;
     pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.00f;
+    pointLight.quadratic = 0.032f;
 
 
     // draw in wireframe
@@ -301,9 +288,10 @@ int main() {
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
         // don't forget to enable shader before setting uniforms
         ourShader.use();
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
+        //pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
         ourShader.setVec3("pointLight.position", pointLight.position);
         ourShader.setVec3("pointLight.ambient", pointLight.ambient);
         ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
@@ -334,7 +322,7 @@ int main() {
 
         //DOG
         glm::mat4 model2 = glm::mat4 (1.0f);
-        model2 = glm::translate(model2, glm::vec3(15.0f, 0.0f, 25.0f));
+        model2 = glm::translate(model2, glm::vec3(15.0f, 0.0f, 30.0f));
         model2 = glm::scale(model2, glm::vec3(0.15f));
         model2 = glm::rotate(model2, glm::radians(270.f), glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -344,7 +332,7 @@ int main() {
 
         //CAT
         glm::mat4 model3 = glm::mat4 (1.0f);
-        model3 = glm::translate(model3, glm::vec3(-15.0f, 0.0f, 25.0f));
+        model3 = glm::translate(model3, glm::vec3(-15.0f, 0.0f, 30.0f));
         model3 = glm::scale(model3, glm::vec3(0.14f));
         model3 = glm::rotate(model3, glm::radians(270.f), glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -354,7 +342,7 @@ int main() {
 
         //HORSE
         glm::mat4 model4 = glm::mat4(1.0f);
-        model4 = glm::translate(model4, glm::vec3(40.0f, 0.0f, 70.0f));
+        model4 = glm::translate(model4, glm::vec3(40.0f, 0.0f, 60.0f));
         model4 = glm::scale(model4, glm::vec3(0.007f));
         model4 = glm::rotate(model4, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.f));
         model4 = glm::rotate(model4, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -401,12 +389,12 @@ int main() {
         ourShader.setMat4("model", model8);
         ourModel8.Draw(ourShader);
 
+
         //HOUSE2
         glm::mat4 model9 = glm::mat4(1.0f);
-        model9 = glm::translate(model9, glm::vec3(50.0f, 0.0f, 120.0f));
+        model9 = glm::translate(model9, glm::vec3(50.0f, 0.0f, 90.0f));
         model9 = glm::scale(model9, glm::vec3(1.0f));
         model9 = glm::rotate(model9, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
 
         ourShader.use();
         ourShader.setMat4("model", model9);
@@ -418,6 +406,7 @@ int main() {
         view = glm::mat4(glm::mat3(programState->camera.GetViewMatrix())); // remove translation from the view matrix
         skyboxShader.setMat4("view", view);
         skyboxShader.setMat4("projection", projection);
+
         // skybox cube
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);
@@ -434,8 +423,6 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    programState->SaveToFile("resources/program_state.txt");
     delete programState;
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
