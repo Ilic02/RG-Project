@@ -141,9 +141,10 @@ int main() {
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     //stbi_set_flip_vertically_on_load(false);
 
-    //BLEND
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glFrontFace(GL_CW);
 
     programState = new ProgramState;
     programState->LoadFromFile("resources/program_state.txt");
@@ -379,14 +380,19 @@ int main() {
 
 
         // render the loaded model
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
                                programState->modelPosition); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(programState->modelScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
         //DOG
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glm::mat4 model2 = glm::mat4 (1.0f);
         model2 = glm::translate(model2, glm::vec3(15.0f, 0.5f, 30.0f));
         model2 = glm::scale(model2, glm::vec3(0.15f));
@@ -395,8 +401,11 @@ int main() {
         ourShader.use();
         ourShader.setMat4("model", model2);
         ourModel2.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
         //CAT
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glm::mat4 model3 = glm::mat4 (1.0f);
         model3 = glm::translate(model3, glm::vec3(-15.0f, 0.0f, 30.0f));
         model3 = glm::scale(model3, glm::vec3(0.14f));
@@ -405,8 +414,11 @@ int main() {
         ourShader.use();
         ourShader.setMat4("model", model3);
         ourModel3.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
-        //HORSE
+        //HORSE;
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glm::mat4 model4 = glm::mat4(1.0f);
         model4 = glm::translate(model4, glm::vec3(40.0f, 0.0f, 60.0f));
         model4 = glm::scale(model4, glm::vec3(0.007f));
@@ -416,8 +428,11 @@ int main() {
         ourShader.use();
         ourShader.setMat4("model", model4);
         ourModel4.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
         //HORSE2
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glm::mat4 model5 = glm::mat4(1.0f);
         model5 = glm::translate(model5, glm::vec3(-40.0f, 0.0f, 70.0f));
         model5 = glm::scale(model5, glm::vec3(0.007f));
@@ -427,6 +442,7 @@ int main() {
         ourShader.use();
         ourShader.setMat4("model", model5);
         ourModel5.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
         //TREE
         glm::mat4 model6 = glm::mat4(1.0f);
@@ -456,6 +472,8 @@ int main() {
         ourModel8.Draw(ourShader);
 
         //HOUSE2
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glm::mat4 model9 = glm::mat4(1.0f);
         model9 = glm::translate(model9, glm::vec3(50.0f, 0.0f, 90.0f));
         model9 = glm::scale(model9, glm::vec3(1.0f));
@@ -464,6 +482,7 @@ int main() {
         ourShader.use();
         ourShader.setMat4("model", model9);
         ourModel9.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
         //FLOOR
         glm::mat4 model10 = glm::mat4(1.0f);
