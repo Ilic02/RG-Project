@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/nikola/Desktop/Fakultet/RG-Project/project_base"
-  "/home/nikola/Desktop/Fakultet/RG-Project/project_base.pdb"
+  "/home/nikola/Desktop/RG-Project/project_base"
+  "/home/nikola/Desktop/RG-Project/project_base.pdb"
   "CMakeFiles/project_base.dir/src/main.cpp.o"
   "CMakeFiles/project_base.dir/src/main.cpp.o.d"
 )
