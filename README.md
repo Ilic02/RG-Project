@@ -17,21 +17,21 @@ CONTROLS
 
 RESOURCES
 -------------------------------------------------------------------------------
-    -https://github.com/JoeyDeVries/LearnOpenGL
+    https://github.com/JoeyDeVries/LearnOpenGL
 
 Project base:
 
-    -https://github.com/matf-racunarska-grafika/project_base
+    https://github.com/matf-racunarska-grafika/project_base
 
 Models and objects:
 
-    -https://free3d.com/
+    https://free3d.com/
 
-    -https://www.cadnav.com/3d-models/sort-17.html
+    https://www.cadnav.com/3d-models/sort-17.html
 
 Skybox:
 
-    -https://opengameart.org/node/14436
+    https://opengameart.org/node/14436
 
 
 
