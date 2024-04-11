@@ -1,4 +1,4 @@
-MANAUL
+INSTRUCTIONS
 ---------------------------------------------------------------------------
 1. git clone https://github.com/Ilic02/RG-Project.git
 2. CLion -> Open -> path/to/my/RG-Project
@@ -26,7 +26,7 @@ Project base:
 Models and objects:
 
     -https://free3d.com/
-    
+
     -https://www.cadnav.com/3d-models/sort-17.html
 
 Skybox:
