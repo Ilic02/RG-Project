@@ -29,6 +29,8 @@ void renderQuad();
 // Window size
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
+bool blinn = false;
+bool blinnKeyPressed = false;
 
 // Camera
 
@@ -61,6 +63,7 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
+    bool blinn = true;
     glm::vec3 modelPosition = glm::vec3(0.0f, 0.0f, 7.0f);
     float modelScale = 1.0f;
     PointLight pointLight;
@@ -145,7 +148,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     // Shaders
-    Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
+    Shader ourShader("resources/shaders/vertexShader.vs", "resources/shaders/fragmentShader.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
     Shader blendingShader("resources/shaders/blending.vs", "resources/shaders/blending.fs");
     Shader hdrShader("resources/shaders/hdr.vs", "resources/shaders/hdr.fs");
@@ -334,7 +337,8 @@ int main() {
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ourShader.use();;
+        ourShader.use();
+        pointLight.position = glm::vec3(50.0 * cos(currentFrame), 80.0f, 50.0f * sin(currentFrame));
         ourShader.setVec3("pointLight.position", pointLight.position);
         ourShader.setVec3("pointLight.ambient", pointLight.ambient);
         ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
@@ -344,6 +348,7 @@ int main() {
         ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
+        ourShader.setInt("blinn", blinn);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
@@ -525,6 +530,17 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         programState->camera.ProcessKeyboard(RIGHT, deltaTime);
 
+    if (programState->blinn && !blinnKeyPressed)
+    {
+        blinn = true;
+        blinnKeyPressed = true;
+    }
+    if (!programState->blinn)
+    {
+        blinn = false;
+        blinnKeyPressed = false;
+    }
+
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !hdrKeyPressed)
     {
         hdr = !hdr;
@@ -591,6 +607,7 @@ void DrawImGui(ProgramState *programState) {
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.quadratic", &programState->pointLight.quadratic, 0.05, 0.0, 1.0);
+        ImGui::Checkbox("BLINN", &programState->blinn);
         ImGui::End();
     }
 
